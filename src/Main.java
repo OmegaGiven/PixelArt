@@ -19,7 +19,6 @@ public class Main extends Application {
             for (int y = 0; y < gridSizeY; y++){
                 Rectangle rectangle = new Rectangle(10,10);
                 Button button = new Button();
-                button.set(rectangle);
                 grid.add(button,x,y);
                 digitalGrid[x][y] = 0;
                 VBox rightPanel = buttons();
