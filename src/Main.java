@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
     int[][] digitalGrid = new int[40][40];
+    String currentColor;
 
     public GridPane grid(int gridSizeX, int gridSizeY, BorderPane gui){
         GridPane grid = new GridPane();
@@ -21,19 +22,7 @@ public class Main extends Application {
                 Button button = new Button();
                 grid.add(button,x,y);
                 digitalGrid[x][y] = 0;
-                VBox rightPanel = buttons();
-                gui.setRight(rightPanel);
-                button.setOnAction(a ->{
-                    String[] colors = {"RED", "BLUE", "GREEN", "BLACK"};
-                    for(String i : colors){
-                        Button color = new Button(i);
-                        color.setOnMouseClicked(e->{
-                            button.setStyle("-fx-background-color: " + i);;
-                        });
-                        rightPanel.getChildren().add(color);
-                    }
-                    gui.setRight(rightPanel);
-                });
+                button.setOnAction(a -> button.setStyle("-fx-background-color: " + currentColor));
 
 
             }
@@ -42,7 +31,7 @@ public class Main extends Application {
     }
 
 
-    public VBox buttons(){
+    public VBox buttons(BorderPane gui){
         VBox buttonPanel = new VBox();
 
         Text description = new Text("GridSize X");
@@ -52,14 +41,28 @@ public class Main extends Application {
         Text description2 = new Text("GridSize Y");
         TextField gridSizeBox2 = new TextField();
         buttonPanel.getChildren().addAll(description2, gridSizeBox2);
+
+        String[] colors = {"RED", "BLUE", "GREEN", "BLACK"};
+        for(String i : colors) {
+            Button color = new Button(i);
+            color.setOnMouseClicked(e -> {
+                currentColor = i;
+                gui.setTop(new Text("Currently selected color; " + i));
+            });
+            buttonPanel.getChildren().add(color);
+        }
         return buttonPanel;
     }
 
 
     public void start(Stage stage){
         BorderPane gui = new BorderPane();
+        currentColor = "BLACK";
+        gui.setTop(new Text("Currently selected color; " + currentColor));
 
-        gui.setCenter(grid(40, 40, gui));
+
+        gui.setRight(buttons(gui));
+        gui.setCenter(grid(30, 20, gui));
 
         gui.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         Scene scene = new Scene(gui);
