@@ -8,7 +8,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.io.*;
 
 
@@ -49,6 +48,12 @@ public class Main extends Application {
 
     }
 
+    public void openFile(){
+        /**
+         * open file implementation here.
+         */
+    }
+
 
     public VBox buttons(BorderPane gui){
         VBox buttonPanel = new VBox();
@@ -85,11 +90,10 @@ public class Main extends Application {
         Button save = new Button("Save To File");
         save.setOnMouseClicked(e->{
             name.setText(nameField.getText());
-            BufferedWriter output;
             try{
-                File file = new File(name.getText() + ".txt");
-                output = new BufferedWriter(new FileWriter(file));
-                output.write(processOutput(digitalGrid));
+                BufferedWriter bw = new BufferedWriter(new FileWriter(name.getText() + ".txt"));
+                bw.write(processOutput(digitalGrid));
+                bw.close();
             }catch( IOException v){
                 v.printStackTrace();
             }
@@ -102,7 +106,6 @@ public class Main extends Application {
 
     public String processOutput(int[][] input){
         String output = "";
-        System.out.println(input.length);
         for (int x = 0; x < input.length; x++){
             for (int y = 0; y < input.length; y++){
                 output += input[x][y];
