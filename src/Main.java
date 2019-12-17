@@ -39,6 +39,52 @@ public class Main extends Application {
         return grid;
     }
 
+
+    public GridPane LoadGrid(int gridSizeX, int gridSizeY, String inText){
+        digitalGrid = new int[gridSizeX][gridSizeY];
+        GridPane grid = new GridPane();
+        int i = 0;
+        for (int x = 0; x < gridSizeX; x++){
+            for (int y = 0; y < gridSizeY; y++){
+                Button button = new Button();
+                String color = "";
+                switch(inText.charAt(i)){
+                    case 0:
+                        color = null;
+                        break;
+                    case 1:
+                        color = "Black";
+                        break;
+                    case 3:
+                        color = "BLUE";
+                        break;
+                    case 4:
+                        color = "GREEN";
+                        break;
+                    case 2:
+                        color = "BLACK";
+                        break;
+                }
+                i++;
+                changeGrid(x, y, color);
+                button.setMinHeight(8);
+                button.setMaxHeight(15);
+                button.setMinWidth(8);
+                button.setMaxWidth(15);
+                grid.add(button,x,y);
+                int ButtonX = x;
+                int ButtonY = y;
+                button.setOnAction(a -> {
+                    if (currentColor == "DELETE") button.setStyle(null);
+                    else button.setStyle("-fx-background-color: " + currentColor);
+                    changeGrid(ButtonX, ButtonY, currentColor);
+                });
+            }
+        }
+        return grid;
+    }
+
+
     public void changeGrid(int x, int y, String color){
         if (color == "RED") digitalGrid[x][y] = 2;
         if (color == "BLUE") digitalGrid[x][y] = 3;
@@ -47,13 +93,6 @@ public class Main extends Application {
         if (color == "DELETE" || color == "null") digitalGrid[x][y] = 0;
 
     }
-
-    public void openFile(){
-        /**
-         * open file implementation here.
-         */
-    }
-
 
     public VBox buttons(BorderPane gui){
         VBox buttonPanel = new VBox();
@@ -98,8 +137,32 @@ public class Main extends Application {
                 v.printStackTrace();
             }
         });
-
         buttonPanel.getChildren().addAll(saveName, nameField, save);
+
+        Text loadName = new Text("Enter in .txt file;");
+        Label name2 = new Label("no text");
+        TextField loadField = new TextField();
+        Button load = new Button("Load File");
+        load.setOnMouseClicked(e->{
+            name2.setText(loadField.getText());
+            try{
+                String currentLine;
+                String textin = "";
+                int rowCount = 0;
+                int length = 0;
+                BufferedReader bw = new BufferedReader(new FileReader(name2.getText() + ".txt"));
+                while ((currentLine = bw.readLine()) != null ){
+                    length = currentLine.length();
+                    textin += bw.readLine();
+                    rowCount++;
+                }
+                gui.setCenter(LoadGrid(length, rowCount, textin));
+            }catch(IOException v){
+                v.printStackTrace();
+            }
+        });
+        buttonPanel.getChildren().addAll(loadName, loadField, load);
+
 
         return buttonPanel;
     }
